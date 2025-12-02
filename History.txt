@@ -1,0 +1,20 @@
+version 1	15 minute dev	2 minute code gen	2 minute test		19 minutes total
+
+Notes v1: I went for a basic version. Definitely not a finished product, but not bad! Surprising,
+positive for a first attempt. Don't get me wrong: lots of follow up TODOs exist.
+
+
+
+TODO controls ask for button to be help. The controller should just be tapped, then will accelerate
+for entire race
+TODO trees move in a wave on the background. Haha no! The trees look fine but should sit there.
+TODO racers should accelerate much more quickly. Rough estimate: 4 second races.
+TODO name of players should be created and presented
+TODO there appears to be... two Santa like characters? Just the one inside the drag.
+TODO It should keep track of wins and losses (and ties!)
+TODO It should notice when there is a tie.
+TODO There should be the rule for a red/green flag to start
+
+
+
+

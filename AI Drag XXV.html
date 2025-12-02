@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Drag Race XXV</title>
+<style>
+  html,body { height:100%; margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: #fff; }
+  canvas { display:block; margin:0 auto; background: linear-gradient(#ffffff, #f8fbff 60%); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+  #ui {
+    width:100%;
+    text-align:center;
+    margin-top:8px;
+  }
+  h1 {
+    margin:14px 0 6px 0;
+    font-size:28px;
+    letter-spacing:1px;
+  }
+  .controls {
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    margin-top:6px;
+    align-items:center;
+  }
+  .btn {
+    padding:10px 16px;
+    border-radius:8px;
+    border:2px solid #333;
+    cursor:pointer;
+    user-select:none;
+    font-weight:700;
+    min-width:120px;
+  }
+  .btn:active { transform: translateY(1px); }
+  .p1 { background: linear-gradient(#fff6f6,#ffdede); border-color:#b30000; color:#4a0000; }
+  .p2 { background: linear-gradient(#f6fff6,#e0ffdfe0); border-color:#006600; color:#003300; }
+  #msg { margin-top:10px; font-weight:600; }
+  #legend { margin-top:8px; color:#444; font-size:14px; }
+  @media (max-width:640px) {
+    canvas { width: 96%; height: 420px; }
+  }
+</style>
+</head>
+<body>
+  <div id="ui">
+    <h1>Drag Race XXV!!!</h1>
+    <div class="controls">
+      <div>
+        <div class="btn p1" id="btnP1">Player 1: hold Q</div>
+        <div style="font-size:12px;color:#666;margin-top:4px">Red harness / car / suit</div>
+      </div>
+      <div>
+        <div class="btn p2" id="btnP2">Player 2: hold P</div>
+        <div style="font-size:12px;color:#666;margin-top:4px">Green harness / car / suit</div>
+      </div>
+    </div>
+    <div id="legend">Hold your key/button to accelerate. First racer that touches the finish wins.</div>
+    <div id="msg"></div>
+  </div>
+
+  <canvas id="c" width="1100" height="520"></canvas>
+
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+
+  // High DPI scaling
+  function resizeCanvasToDisplaySize() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * dpr) || canvas.width;
+    canvas.height = Math.round(rect.height * dpr) || canvas.height;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  // Initially set canvas size to intrinsic width/height but allow responsive scaling
+  canvas.style.width = canvas.width + 'px';
+  canvas.style.height = canvas.height + 'px';
+  resizeCanvasToDisplaySize();
+  window.addEventListener('resize', () => { canvas.style.width = canvas.width/ (window.devicePixelRatio||1) + 'px'; canvas.style.height = canvas.height/ (window.devicePixelRatio||1) + 'px'; resizeCanvasToDisplaySize(); });
+
+  const W = () => canvas.clientWidth;
+  const H = () => canvas.clientHeight;
+
+  // Game world configuration
+  const finishX = () => W() - 110; // x-coordinate of finish line (world coords same as screen)
+  const laneYs = [ H()*0.38, H()*0.62 ]; // vertical positions for player 1 and 2
+  const reindeerCount = 8;
+  const spacing = 46; // spacing between reindeer
+  const carToFirstReindeerGap = 18; // gap between car and nearest reindeer
+  const initialRightmostVisibleX = 60; // rightmost visible reindeer x (so only that one visible at start)
+
+  // Player colors
+  const players = [
+    {
+      id:1, color: '#d40000', accent:'#ff3b3b', lane: laneYs[0],
+      key: 'q', btn: document.getElementById('btnP1')
+    },
+    {
+      id:2, color: '#0a8a2b', accent:'#3cff73', lane: laneYs[1],
+      key: 'p', btn: document.getElementById('btnP2')
+    }
+  ];
+
+  // Build each player's train (car + reindeer)
+  class Train {
+    constructor(player) {
+      this.player = player;
+      // We use world coordinates that match screen coords (no camera), but initial positions are offset so many pieces are off-screen to the left
+      // The rightmost reindeer starts near initialRightmostVisibleX on the left side. Subsequent reindeer extend leftwards (decreasing x)
+      this.reindeer = [];
+      // place rightmost reindeer at initialRightmostVisibleX
+      let rightmostReX = initialRightmostVisibleX;
+      for (let i = 0; i < reindeerCount; i++) {
+        // each reindeer positioned left of the next by spacing
+        const rx = rightmostReX - i * spacing;
+        this.reindeer.push({ x: rx, y: player.lane, facing: 0 }); // facing 0 = right
+      }
+      // car is to the left of the reindeer line
+      const carX = rightmostReX - reindeerCount * spacing - carToFirstReindeerGap - 92; // car width ~72-92
+      this.car = { x: carX, y: player.lane };
+      // For collision detection, treat car front nose at car.x + carWidth*0.8
+      this.carWidth = 92;
+      this.carHeight = 34;
+
+      this.velocity = 0;
+      this.throttle = false;
+      this.maxSpeed = 6.5 + Math.random()*1.2; // small variability
+      this.accel = 0.15;
+      this.friction = 0.02;
+      this.finished = false;
+    }
+
+    update(dt) {
+      if (this.finished) return;
+      // throttle increases velocity
+      if (this.throttle) {
+        this.velocity += this.accel * (dt*0.016);
+      } else {
+        this.velocity -= this.friction * (dt*0.016);
+      }
+      // clamp
+      if (this.velocity < 0) this.velocity = 0;
+      if (this.velocity > this.maxSpeed) this.velocity = this.maxSpeed;
+
+      // move all reindeer and car rightwards by velocity * dt
+      const dx = this.velocity * dt * 0.6; // tune
+      for (let r of this.reindeer) r.x += dx;
+      this.car.x += dx;
+
+      // small bobbing on reindeer/santa to add life
+      for (let i=0;i<this.reindeer.length;i++){
+        const r = this.reindeer[i];
+        r.y = this.player.lane + Math.sin((performance.now()/450) + i*0.35) * 2.2;
+      }
+      this.car.y = this.player.lane + Math.sin(performance.now()/310 + (this.player.id)*1.7)*1.2;
+    }
+
+    frontX() {
+      return this.car.x + this.carWidth*0.85;
+    }
+  }
+
+  const trains = players.map(p => new Train(p));
+  let winner = null;
+  const msgEl = document.getElementById('msg');
+
+  // Input handling: keydown/keyup Q and P, and on-screen button press/hold
+  const keyState = {};
+  window.addEventListener('keydown', (e) => {
+    const k = e.key.toLowerCase();
+    for (let t of trains) {
+      if (k === t.player.key) {
+        t.throttle = true;
+        keyState[k] = true;
+        e.preventDefault();
+      }
+    }
+  });
+  window.addEventListener('keyup', (e) => {
+    const k = e.key.toLowerCase();
+    for (let t of trains) {
+      if (k === t.player.key) {
+        t.throttle = false;
+        keyState[k] = false;
+        e.preventDefault();
+      }
+    }
+  });
+
+  // Buttons
+  trains.forEach(t => {
+    const btn = t.player.btn;
+    btn.addEventListener('mousedown', (ev) => { t.throttle = true; btn.classList.add('active'); ev.preventDefault(); });
+    btn.addEventListener('touchstart', (ev)=>{ t.throttle = true; ev.preventDefault(); }, {passive:false});
+    document.addEventListener('mouseup', ()=>{ t.throttle = false; });
+    document.addEventListener('touchend', ()=>{ t.throttle = false; });
+    btn.addEventListener('mouseup', ()=>{ t.throttle = false; btn.classList.remove('active'); });
+    btn.addEventListener('mouseleave', ()=>{ t.throttle = false; btn.classList.remove('active'); });
+    btn.addEventListener('touchend', ()=>{ t.throttle = false; btn.classList.remove('active'); });
+  });
+
+  // Draw background pine forest at top
+  function drawPines() {
+    const topHeight = Math.max(80, H()*0.22);
+    const pineCount = Math.ceil(W()/36) + 6;
+    ctx.save();
+    // draw a subtle snowy horizon
+    ctx.fillStyle = '#f2f9f2';
+    ctx.fillRect(0,0,W(), topHeight);
+    // pines as layered triangles
+    for (let i= -2; i < pineCount; i++) {
+      const baseX = i * 36 + (performance.now() / 60 % 36);
+      const baseY = topHeight - 10 + Math.sin((i*0.6)+(performance.now()/900)) * 4;
+      const height = 50 + ((i%3)+1)*6;
+      drawPine(baseX, baseY, height);
+    }
+    ctx.restore();
+  }
+  function drawPine(x, y, h) {
+    ctx.save();
+    // trunk
+    ctx.fillStyle = '#2d3b2d';
+    ctx.fillRect(x+8, y + h*0.9, 6, h*0.2);
+    // layers of green
+    ctx.fillStyle = '#0f6b2b';
+    ctx.beginPath();
+    ctx.moveTo(x, y + h*0.2);
+    ctx.lineTo(x + 16, y);
+    ctx.lineTo(x + 32, y + h*0.2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x-4, y + h*0.5);
+    ctx.lineTo(x + 16, y + h*0.1);
+    ctx.lineTo(x + 36, y + h*0.5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x-8, y + h*0.8);
+    ctx.lineTo(x + 16, y + h*0.35);
+    ctx.lineTo(x + 40, y + h*0.8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Draw finish line on right
+  function drawFinishLine() {
+    const x = finishX();
+    const top = 0;
+    const bottom = H();
+    // pole
+    ctx.fillStyle = '#222';
+    ctx.fillRect(x-6, top+6, 8, bottom-12);
+    // checkered banner
+    const bw = 18;
+    const bh = 28;
+    const bannerTop = H()*0.18;
+    for (let y = bannerTop; y < H()*0.9; y += bh) {
+      for (let i=0;i<3;i++) {
+        ctx.fillStyle = ((i + Math.floor(y/bh)) % 2===0) ? '#fff' : '#000';
+        ctx.fillRect(x + 8 + i*bw, y, bw, bh);
+      }
+    }
+    // text 'FINISH' rotated
+    ctx.save();
+    ctx.translate(x + 28, H()*0.16);
+    ctx.rotate(Math.PI/2);
+    ctx.fillStyle = '#333';
+    ctx.font = '700 14px sans-serif';
+    ctx.fillText('FINISH', 0, 0);
+    ctx.restore();
+  }
+
+  // draw a reindeer facing right at position (x,y) using color for harness
+  function drawReindeer(x, y, color) {
+    ctx.save();
+    // body
+    ctx.translate(x, y);
+    ctx.scale(1,1);
+    ctx.fillStyle = '#8d5a33';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 14, 9, 0, 0, Math.PI*2);
+    ctx.fill();
+    // neck + head
+    ctx.fillRect(10, -8, 18, 6);
+    ctx.beginPath();
+    ctx.ellipse(26, -6, 8, 6, 0, 0, Math.PI*2);
+    ctx.fill();
+    // eye
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(28, -7, 1.6, 0, Math.PI*2);
+    ctx.fill();
+    // antlers (simple)
+    ctx.strokeStyle = '#4a2e1b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(30, -12);
+    ctx.lineTo(34, -20);
+    ctx.moveTo(30, -12);
+    ctx.lineTo(36, -14);
+    ctx.stroke();
+    // legs
+    ctx.strokeStyle = '#6f4226';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-6, 8); ctx.lineTo(-6, 18);
+    ctx.moveTo(4, 8); ctx.lineTo(4, 18);
+    ctx.moveTo(14, 8); ctx.lineTo(14, 20);
+    ctx.moveTo(20, 8); ctx.lineTo(20, 20);
+    ctx.stroke();
+    // harness connector ring / strap
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.6;
+    ctx.beginPath();
+    ctx.moveTo(-8, -2);
+    ctx.lineTo(24, -2);
+    ctx.stroke();
+    // small harness ring
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(-8, -2, 3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // draw drag racer car and driver (Santa) with suit color
+  function drawCarWithSanta(carX, carY, playerColor, accentColor) {
+    ctx.save();
+    const w = 92, h = 34;
+    ctx.translate(carX, carY);
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillRect(6, h*0.85, w*0.86, 6);
+    // body
+    ctx.fillStyle = '#222';
+    ctx.beginPath();
+    ctx.roundRect(0, -h/2, w, h, 6);
+    ctx.fill();
+    // accent stripe
+    ctx.fillStyle = accentColor;
+    ctx.fillRect(12, -h/2 + 8, w - 24, 8);
+    // windshield
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.fillRect(w-48, -h/2 + 2, 34, 14);
+    // wheels
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.ellipse(18, h/2 - 2, 10, 10, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(w-18, h/2 - 2, 10, 10, 0, 0, Math.PI*2);
+    ctx.fill();
+    // Santa in car - torso + head with colored suit
+    // torso
+    ctx.fillStyle = playerColor;
+    ctx.fillRect(w-62, -h/2 + 2, 18, 16);
+    // head
+    ctx.beginPath();
+    ctx.fillStyle = '#ffdfc4';
+    ctx.arc(w-50, -h/2 -2, 7, 0, Math.PI*2);
+    ctx.fill();
+    // hat
+    ctx.fillStyle = playerColor;
+    ctx.beginPath();
+    ctx.moveTo(w-56, -h/2 -6);
+    ctx.lineTo(w-44, -h/2 -6);
+    ctx.lineTo(w-48, -h/2 -14);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(w-48, -h/2 -14, 2.8, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  // draw Santa standing (left of reindeer or above car) -- suitColor determines suit
+  function drawSantaAt(x,y,suitColor) {
+    ctx.save();
+    ctx.translate(x,y);
+    // body
+    ctx.fillStyle = suitColor;
+    ctx.fillRect(-10, -12, 20, 18);
+    // belt
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-10, -2, 20, 5);
+    // head
+    ctx.beginPath();
+    ctx.fillStyle = '#ffdfc4';
+    ctx.arc(0, -18, 8, 0, Math.PI*2);
+    ctx.fill();
+    // hat
+    ctx.fillStyle = suitColor;
+    ctx.beginPath();
+    ctx.moveTo(-12, -24);
+    ctx.lineTo(12, -24);
+    ctx.lineTo(0, -36);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(0, -36, 3, 0, Math.PI*2); ctx.fill();
+    // beard
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(0, -12, 6, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // draw harness lines connecting reindeer to a central harness point near the car
+  function drawHarness(reindeer, car, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3.2;
+    ctx.beginPath();
+    // harness line along reindeer ring points: connect ring points on each reindeer
+    for (let i = 0; i < reindeer.length; i++) {
+      const r = reindeer[i];
+      const rx = r.x - 8; // ring point
+      const ry = r.y - 2;
+      if (i === 0) ctx.moveTo(rx, ry);
+      else ctx.lineTo(rx, ry);
+    }
+    // connect harness to car connector
+    ctx.lineTo(car.x + 8, car.y - 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // main draw
+  function draw() {
+    // white snow background
+    ctx.clearRect(0,0,W(),H());
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0,0,W(),H());
+
+    drawPines();
+
+    // horizon snow hill
+    ctx.fillStyle = '#f4f8ff';
+    ctx.beginPath();
+    ctx.moveTo(0, H()*0.3 + 18);
+    ctx.quadraticCurveTo(W()*0.4, H()*0.22, W(), H()*0.3 + 24);
+    ctx.lineTo(W(), H());
+    ctx.lineTo(0, H());
+    ctx.closePath();
+    ctx.fill();
+
+    // draw finish line
+    drawFinishLine();
+
+    // draw trains (order: back to front by lane)
+    for (let t of trains) {
+      // draw harness
+      drawHarness(t.reindeer, t.car, t.player.color);
+
+      // draw reindeer (draw from rightmost to leftmost so overlaps look ok)
+      for (let i = 0; i < t.reindeer.length; i++) {
+        const r = t.reindeer[i];
+        // only draw if in or near visible range (simple culling)
+        if (r.x > -120 && r.x < W() + 120) {
+          drawReindeer(r.x, r.y, t.player.color);
+        }
+      }
+
+      // draw Santa standing behind reindeer (leftmost) - choose leftmost reindeer visible position minus offset
+      const leftmost = t.reindeer[t.reindeer.length-1];
+      // place a supporting Santa (the second Santa in scene) at left of train (only when visible)
+      const santaX = leftmost.x - 42;
+      if (santaX > -200 && santaX < W() + 200) {
+        drawSantaAt(santaX, leftmost.y - 4, t.player.color);
+      }
+
+      // draw car and driver Santa inside
+      if (t.car.x > -200 && t.car.x < W() + 200) {
+        drawCarWithSanta(t.car.x, t.car.y, t.player.color, t.player.accent);
+      }
+    }
+
+    // HUD - names and small indicators
+    ctx.save();
+    ctx.font = '700 13px sans-serif';
+    ctx.fillStyle = '#333';
+    ctx.fillText('Player 1 (Q) — RED', 12, 22);
+    ctx.fillStyle = players[0].color;
+    ctx.fillRect(12,26,48,6);
+    ctx.fillStyle = '#333';
+    ctx.fillText('Player 2 (P) — GREEN', 160, 22);
+    ctx.fillStyle = players[1].color;
+    ctx.fillRect(160,26,48,6);
+    ctx.restore();
+  }
+
+  // victory overlay
+  function showWinner(winnerTrain) {
+    winner = winnerTrain;
+    msgEl.innerText = `Player ${winnerTrain.player.id} WINS! 🎉`;
+  }
+
+  // reset function (keeps starting positions intact)
+  function reset() {
+    // reconstruct trains with fresh offsets
+    for (let i=0;i<trains.length;i++){
+      const p = players[i];
+      trains[i] = new Train(p);
+    }
+    winner = null;
+    msgEl.innerText = '';
+  }
+
+  // Expand Canvas roundRect prototype for convenience
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x,y,w,h,r) {
+      if (typeof r === 'undefined') r = 4;
+      this.beginPath();
+      this.moveTo(x + r, y);
+      this.arcTo(x + w, y, x + w, y + h, r);
+      this.arcTo(x + w, y + h, x, y + h, r);
+      this.arcTo(x, y + h, x, y, r);
+      this.arcTo(x, y, x + w, y, r);
+      this.closePath();
+      return this;
+    };
+  }
+
+  // Main loop
+  let last = performance.now();
+  function loop(now) {
+    resizeCanvasToDisplaySize();
+    const dt = Math.min(7, (now - last) / 16.66); // normalized delta-ish
+    last = now;
+    if (!winner) {
+      for (let t of trains) {
+        t.update(dt);
+      }
+      // check for finish collision (car front x >= finishX)
+      for (let t of trains) {
+        if (!t.finished && t.frontX() >= finishX()) {
+          t.finished = true;
+          showWinner(t);
+          // stop all other trains
+          for (let o of trains) { o.throttle = false; o.velocity = 0; }
+          break;
+        }
+      }
+    }
+
+    draw();
+
+    if (!winner) requestAnimationFrame(loop);
+    else { draw(); /* final frame */ }
+  }
+
+  // start loop
+  requestAnimationFrame(loop);
+
+  // Add double-click reset on canvas and a reset button (small)
+  canvas.addEventListener('dblclick', reset);
+  // Add instruction that double-click resets
+  const legend = document.getElementById('legend');
+  legend.innerHTML += ' (double-click canvas to reset)';
+
+  // Prevent accidental text selection on long hold of buttons
+  document.addEventListener('selectstart', (e) => { if (e.target.classList && e.target.classList.contains('btn')) e.preventDefault(); });
+
+  // Expose reset on pressing R
+  window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'r') reset();
+  });
+
+})();
+</script>
+
+</body>
+</html>
