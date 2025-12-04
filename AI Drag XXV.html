@@ -56,7 +56,7 @@
     </div>
 
     <div id="records" aria-hidden="true">
-      <div class="small" style="color:#333">Hold nothing — tap a button or press the key to start a racer. Velocity ticks every 0.1s.</div>
+      <div class="small" style="color:#333">Tap a button or press the key to start a racer. Movement updates every 0.05s; acceleration checks every 0.2s.</div>
     </div>
 
     <div id="message"></div>
@@ -152,9 +152,8 @@
       // car left of reindeer line
       const carX = RIGHTMOST_VISIBLE_REX - REINDEER*RE_SPACING - 18 - CAR_WIDTH;
       this.car = { x: carX, y: laneY };
-      // driver santa is drawn inside car; also a standing Santa near leftmost reindeer
-      // velocity unit is pixels per tick (tick = 0.1s). Start at 0 until started.
-      this.velocityUnits = 0; // pixels per tick (0.1s)
+      // velocity unit is pixels per movement tick (tick = 0.05s). Start at 0 until started.
+      this.velocityUnits = 0; // pixels per tick (0.05s)
       this.started = false;
       this.finished = false;
       this.finishTime = null;
@@ -175,18 +174,21 @@
     start() {
       if (this.started || this.finished) return;
       this.started = true;
-      this.velocityUnits = 1; // initial 1 pixel per 0.1s
+      this.velocityUnits = 1; // initial 1 pixel per 0.05s tick
     }
-    // called every tick (100ms) to possibly increase velocity and move
-    tick() {
+    // move called every movement tick (50ms)
+    move() {
       if (!this.started || this.finished) return;
-      // 80% chance to increase by 1 pixel/tick
-      if (Math.random() < 0.8) {
-        this.velocityUnits += 1;
-      }
       const dx = this.velocityUnits; // pixels per tick
       for (let r of this.reindeer) r.x += dx;
       this.car.x += dx;
+    }
+    // called on acceleration check (every 200ms)
+    maybeAccelerate() {
+      if (!this.started || this.finished) return;
+      if (Math.random() < 0.8) {
+        this.velocityUnits += 1; // increase by 1 pixel per tick
+      }
     }
   }
 
@@ -414,19 +416,30 @@
     ctx.restore();
   }
 
-  // Game ticking: every 100ms update velocity and positions, then check finish
+  // Game ticking: movement ticks every 50ms, acceleration checks every 200ms
   let tickInterval = null;
-  const TICK_MS = 100;
+  const TICK_MS = 50; // movement tick (0.05s)
+  const ACCEL_CHECK_MS = 200; // acceleration check interval (0.2s)
   let raceActive = false;
   let raceFinished = false;
 
   function startTickLoop() {
     if (tickInterval) return;
+    let accelAccumulator = 0;
     tickInterval = setInterval(() => {
-      // each train tick
+      // movement tick
       for (let t of trains) {
-        t.tick();
+        t.move();
       }
+      accelAccumulator += TICK_MS;
+      if (accelAccumulator >= ACCEL_CHECK_MS) {
+        // perform acceleration checks
+        for (let t of trains) {
+          t.maybeAccelerate();
+        }
+        accelAccumulator = 0;
+      }
+
       // after movement check finishes - evaluate both before updating records to detect ties
       const fx = finishX();
       const finishedFlags = trains.map(t => !t.finished && t.frontX() >= fx ? true : false);

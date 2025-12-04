@@ -1,10 +1,10 @@
-version 1	15 minute dev	2 minute code gen	2 minute test		19 minutes total
+version 1	15 minutes dev	2 minutes code gen	2 minutes test		19 minutes total
 
 Notes v1: I went for a basic version. Definitely not a finished product, but not bad! Surprising,
 positive for a first attempt. Don't get me wrong: lots of follow up TODOs exist.
 
 
-version 2 	14 minute dev	1 minute code gen	3 minute test		37 minutes total
+version 2 	14 minutes dev	1 minute code gen	3 minutes test		37 minutes total
 
 Notes v2: it is early. Try to fix ALL the prior issue. The odds are low. But hey, why take time? If
 you can fix 8 issues and create 2 new ones, that would be great.
@@ -13,15 +13,23 @@ were great, some are... merely good, need tweaks, but better. Some things remain
 this is borderline playable as-is.
 
 
-TODO race acceleration needs improvement. Every 0.1 seconds looks a little jumpy. Maybe every 0.05 second
-looks smooth enough? Maybe frames are every 0.05 seconds, and acceleration is just 0.1 second (to keep
-the speed the same).
+version 3	8 minutes dev	2 minutes code gen	1 minute test		48 minutes total
+
+Notes v3: switched to just one change - the more refined acceleration. The first build was MASSIVELY
+different. It went to very simple graphic. Very abstract; definitely worse. I asked it to build it
+directly with v2 as a basis, just the acceleration change. It did it well - the changes were 
+fairly small; all changes seemed directed toward the acceleration.
+
+
 TODO there appears to be... two Santa like characters? Just the one inside the drag.
 TODO tie management needs to be better. Haven't looked at code (yet). It seems it is a draw if they cross the
 finish line at the same 0.1 second interval, even if one gets their first (shows as ahead). Change to
 tie if they cross at the same time AND the distance in the race is exactly the same.
 TODO There should be the rule for a red/green flag to start
+TODO The bottom shows details about starting the race (toward bottom of screen) show details of updates
+and acceleration. Drop those numeric stats - they are not necessary; not cool.
 
-
-
+MAYBE Show live velocities (pixels/0.1s) next to each players name
+MAYBE Sound effect on start/finish
+MAYBE Add visual snow/confetti when someone wins
 
