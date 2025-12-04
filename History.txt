@@ -4,15 +4,22 @@ Notes v1: I went for a basic version. Definitely not a finished product, but not
 positive for a first attempt. Don't get me wrong: lots of follow up TODOs exist.
 
 
+version 2 	14 minute dev	1 minute code gen	3 minute test		37 minutes total
 
-TODO controls ask for button to be help. The controller should just be tapped, then will accelerate
-for entire race
-TODO trees move in a wave on the background. Haha no! The trees look fine but should sit there.
-TODO racers should accelerate much more quickly. Rough estimate: 4 second races.
-TODO name of players should be created and presented
+Notes v2: it is early. Try to fix ALL the prior issue. The odds are low. But hey, why take time? If
+you can fix 8 issues and create 2 new ones, that would be great.
+Result: it was a lot better! OK, I ended up skipping a couple, but I fixed six of them. Some changes
+were great, some are... merely good, need tweaks, but better. Some things remain for sure, but 
+this is borderline playable as-is.
+
+
+TODO race acceleration needs improvement. Every 0.1 seconds looks a little jumpy. Maybe every 0.05 second
+looks smooth enough? Maybe frames are every 0.05 seconds, and acceleration is just 0.1 second (to keep
+the speed the same).
 TODO there appears to be... two Santa like characters? Just the one inside the drag.
-TODO It should keep track of wins and losses (and ties!)
-TODO It should notice when there is a tie.
+TODO tie management needs to be better. Haven't looked at code (yet). It seems it is a draw if they cross the
+finish line at the same 0.1 second interval, even if one gets their first (shows as ahead). Change to
+tie if they cross at the same time AND the distance in the race is exactly the same.
 TODO There should be the rule for a red/green flag to start
 
 

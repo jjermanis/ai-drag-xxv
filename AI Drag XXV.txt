@@ -1,18 +1,27 @@
 Create a single-page app in a single HTML file with the following requirements:
 - Name: Drag Race XXV
 - Goal: get your Santa Claus (with his reindeer and drag racer) across the finish line
-- the screen in primarily white, like snow. There is a pine forest at the top of the screen, in the background.
+- the screen is primarily white, like snow. 
+- There is a pine forest at the top of the screen, in the background. The pine forest does not move at all in the game.
 - the top of the screen is centered and says Drag Race XXV!!!
 - there are two Santa Clauses on the screen.
 - there is a finish line on the right side of the screen.
 - a Santa Claus is a racing Santa Claus. Starting on the right, there is a line of 8 reindeer. The are connected with
 a harness line, like horses would use to connect to reach other. The reindeer face right. To the left of the reindeer is a
 drag racer car. Inside the car is a Santa Claus.
-- there are two players in this game. Each player has a button that starts the drag racer. Player 1 uses the letter Q.
+- there are two players in this game. Each player has a button that starts the drag racer. They tap their button to start
+racing. They do not need to hold the button - if they tap, their will continue to accelerate. Player 1 uses the letter Q.
 Player 2 uses the letter P. 
+- When they accelerate, they start at a velocity if 1 pixel every 0.1 seconds. Every 0.1 seconds, there is an 80% it gets
+faster. If it gets faster, velocity increases 1 pixel more every 0.1 seconds. If it does not get faster, it stays the same
+velocity.
 - Each player has special colors for the harness line, the drag racer, and the Santa Claus suit. Player 1 uses a
 red special color. Player 2 uses a green special color.
+- Each player has a special name. Player 1 is named Swift Santa. Player 2 is named Nitro Nicolas.
+- For each player, it will show their race records in this format: X-Y-Z. X is how many wins, Y is how many losses,
+Z is how many ties.
 - When a player's drag racer starts, it accelerates toward the right. At first, all you can see is the first deer -
 everything else is not seen, to the left of the screen. The players deer and drag racer travel to the right. The first
-drag racer that touches the finish line wins the race.
+drag racer that touches the finish line wins the race. If both players reach the finish line at the same time, it is
+a tie for both of them.
 
