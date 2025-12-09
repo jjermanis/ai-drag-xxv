@@ -11,7 +11,7 @@
   header { text-align:center; margin-bottom:6px; }
   h1 { margin:10px 0 2px 0; font-size:28px; letter-spacing:1px; }
   #canvas-wrap { background: linear-gradient(#ffffff, #f8fbff 70%); border-radius:6px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); overflow:hidden; }
-  canvas { display:block; width:100%; height:360px; }
+  canvas { display:block; width:100%; height:300px; }
   #controls { display:flex; justify-content:center; gap:18px; margin:10px 0; align-items:top; flex-wrap:wrap; }
   .panel { background:#fff; border-radius:8px; padding:10px 12px; box-shadow:0 3px 8px rgba(0,0,0,0.04); min-width:180px; text-align:center; }
   .start-btn { display:inline-block; padding:10px 14px; border-radius:8px; font-weight:700; cursor:pointer; user-select:none; border:2px solid #333; min-width:130px; }
@@ -36,7 +36,7 @@
     </header>
 
     <div id="canvas-wrap">
-      <canvas id="c" width="1100" height="360"></canvas>
+      <canvas id="c" width="1100" height="300"></canvas>
     </div>
 
     <div id="controls">
@@ -194,7 +194,7 @@
 
   // create two trains on separate lanes
   function laneYs() {
-    return [ H()*0.30, H()*0.50 ];
+    return [ H()*0.48, H()*0.70 ];
   }
   let trains = [];
   function buildTrains() {

@@ -30,10 +30,12 @@ and as a percentage, the bottom screen has too much useless. Would work better, 
 dropping both team down quite a bit.
 
 
-TODO continue to approve main part space. Move players down; get rid of the bottom part of the action
-screen. On Lines 14 and 39 (canvas settings), the lines are set from 520 to 360. Maybe keep that, maybe drop a little
-like 300. On Lines 197 (laneYs function) the are set to .30 and .50. Maybe something a bit more like 
-original, like .36 and .54?
+version 5	4 minutes dev	2 minutes code gen	2 minutes test		1 hour 22 total
+
+Notes v5: after the v4 version, looking at the diff, it was very easy to see how to tweak the UI
+spacing. I did that - it was quick, easy, and I now have what I wanted.
+
+
 TODO there appears to be... two Santa like characters? Just the one inside the drag.
 TODO There should be the rule for a red/green flag to start
 TODO The bottom shows details about starting the race (toward bottom of screen) show details of updates
