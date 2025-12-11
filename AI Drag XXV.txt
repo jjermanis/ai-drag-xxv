@@ -6,7 +6,7 @@ Create a single-page app in a single HTML file with the following requirements:
 - the top of the screen is centered and says Drag Race XXV!!!
 - there are two Santa Clauses on the screen.
 - there is a finish line on the right side of the screen.
-- a Santa Claus is a racing Santa Claus. Starting on the right, there is a line of 8 reindeer. The are connected with
+- a Santa Claus is a racing Santa Claus. Starting on the right, there is a line of 8 reindeer. They are connected with
 a harness line, like horses would use to connect to reach other. The reindeer face right. To the left of the reindeer is a
 drag racer car. Inside the car is a Santa Claus.
 - there are two players in this game. Each player has a button that starts the drag racer. They tap their button to start
