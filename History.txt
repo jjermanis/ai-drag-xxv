@@ -42,7 +42,16 @@ Notes v6: removed some UI elements. Got rid of direction and details on how game
 rid of notes on how to restart. Quick and easy.
 
 
-TODO there appears to be... two Santa like characters? Just the one inside the drag.
+version 7	16 elements dev	2 minutes code gen	2 minutes test		1 hour 54
+
+Notes v7: the weird appearances of 2 different Santas on each vehicle was annoying. Further,
+it was annoying I liked the location of 1 Santa (inside the car) and the depiction of the
+other (on the line). This two steps. First, I removed the Santa inside the car. Next, I
+placed the other Santa into the car. Took some time, but pretty easy. Required a one-line
+manual change to tweak the vertical placement in the car. Very happy! Next will be adding the
+set-go lights to start the race. I'm nervous!
+
+
 TODO There should be the rule for a red/green flag to start
 TODO Get a cooler version of the title up top
 

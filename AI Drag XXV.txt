@@ -4,13 +4,13 @@ Create a single-page app in a single HTML file with the following requirements:
 - the screen is primarily white, like snow. 
 - There is a pine forest at the top of the screen, in the background. The pine forest does not move at all in the game.
 - the top of the screen is centered and says Drag Race XXV!!!
-- there are two Santa Clauses on the screen.
+- there are two racing Santa Clauses on the screen.
 - there is a finish line on the right side of the screen.
 - a Santa Claus is a racing Santa Claus. Starting on the right, there is a line of 8 reindeer. They are connected with
-a harness line, like horses would use to connect to reach other. The reindeer face right. To the left of the reindeer is a
+a harness line, like horses would use to connect to reach other. The reindeers face right. To the left of the reindeer is a
 drag racer car. Inside the car is a Santa Claus.
 - there are two players in this game. Each player has a button that starts the drag racer. They tap their button to start
-racing. They do not need to hold the button - if they tap, their will continue to accelerate. Player 1 uses the letter Q.
+racing. They do not need to hold the button - if they tap, their drag racer will continue to accelerate. Player 1 uses the letter Q.
 Player 2 uses the letter P. 
 - When they accelerate, they start at a velocity of 1 pixel every 0.05 seconds. Every 0.2 seconds, there is an 80% chance it gets
 faster. If it gets faster, velocity increases 1 pixel more every 0.05 seconds. If it does not get faster, it stays the same
