@@ -168,7 +168,7 @@
     start() {
       if (this.started || this.finished) return;
       this.started = true;
-      this.velocityUnits = 1; // initial 1 pixel per 0.05s tick
+      this.velocityUnits = 1;
     }
     // move called every movement tick (50ms)
     move() {
@@ -181,7 +181,7 @@
     maybeAccelerate() {
       if (!this.started || this.finished) return;
       if (Math.random() < 0.8) {
-        this.velocityUnits += 1; // increase by 1 pixel per tick
+        this.velocityUnits += 1;
       }
     }
   }
@@ -264,14 +264,13 @@
     ctx.beginPath(); ctx.ellipse(26,-6,8,6,0,0,Math.PI*2); ctx.fill();
     // eye
     ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(28,-7,1.6,0,Math.PI*2); ctx.fill();
-    // antlers
-    ctx.strokeStyle = '#4a2e1b'; ctx.lineWidth = 2; ctx.beginPath();
-    ctx.moveTo(30,-12); ctx.lineTo(34,-20); ctx.moveTo(30,-12); ctx.lineTo(36,-14); ctx.stroke();
-    // legs
+    ctx.strokeStyle = '#4a2e1b'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(30,-12);
+    ctx.lineTo(34,-20); ctx.moveTo(30,-12); ctx.lineTo(36,-14); ctx.stroke();
     ctx.strokeStyle = '#6f4226'; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(-6,8); ctx.lineTo(-6,18); ctx.moveTo(4,8); ctx.lineTo(4,18);
-    ctx.moveTo(14,8); ctx.lineTo(14,20); ctx.moveTo(20,8); ctx.lineTo(20,20); ctx.stroke();
-    // harness strap
+    ctx.beginPath(); ctx.moveTo(-6,8); ctx.lineTo(-6,18);
+    ctx.moveTo(4,8); ctx.lineTo(4,18);
+    ctx.moveTo(14,8); ctx.lineTo(14,20);
+    ctx.moveTo(20,8); ctx.lineTo(20,20); ctx.stroke();
     ctx.strokeStyle = color; ctx.lineWidth = 3.2; ctx.beginPath();
     ctx.moveTo(-8,-2); ctx.lineTo(24,-2); ctx.stroke();
     // ring
@@ -279,6 +278,7 @@
     ctx.restore();
   }
 
+  // Santa inside car only (standing Santa removed)
 function drawCarWithSanta(carX, carY, suitColor, accent) {
   ctx.save();
   const w = CAR_WIDTH, h = CAR_HEIGHT;
@@ -311,25 +311,13 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
   ctx.fillStyle = suitColor; ctx.fillRect(-10,-12,20,18);
   ctx.fillStyle = '#1a1a1a'; ctx.fillRect(-10,-2,20,5); // belt
   ctx.beginPath(); ctx.fillStyle = '#ffdfc4'; ctx.arc(0,-18,8,0,Math.PI*2); ctx.fill(); // head
-  ctx.fillStyle = suitColor; ctx.beginPath(); ctx.moveTo(-12,-24); ctx.lineTo(12,-24); ctx.lineTo(0,-36); ctx.closePath(); ctx.fill(); // hat
+  ctx.fillStyle = suitColor; ctx.beginPath(); ctx.moveTo(-12,-24); ctx.lineTo(12,-24); ctx.lineTo(0,-36); ctx.closePath();       ctx.fill(); 
+  // hat
   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0,-36,3,0,Math.PI*2); ctx.fill();
   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0,-12,6,0,Math.PI*2); ctx.fill(); // beard
   ctx.restore();
 
   ctx.restore();
-  }
-
-  // standing Santa (near leftmost reindeer)
-  function drawStandingSanta(x,y,suitColor) {
-    ctx.save();
-    ctx.translate(x,y);
-    ctx.fillStyle = suitColor; ctx.fillRect(-10,-12,20,18);
-    ctx.fillStyle = '#1a1a1a'; ctx.fillRect(-10,-2,20,5); // belt
-    ctx.beginPath(); ctx.fillStyle = '#ffdfc4'; ctx.arc(0,-18,8,0,Math.PI*2); ctx.fill(); // head
-    ctx.fillStyle = suitColor; ctx.beginPath(); ctx.moveTo(-12,-24); ctx.lineTo(12,-24); ctx.lineTo(0,-36); ctx.closePath(); ctx.fill(); // hat
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0,-36,3,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0,-12,6,0,Math.PI*2); ctx.fill(); // beard
-    ctx.restore();
   }
 
   // harness connecting reindeers to car (line)
@@ -357,6 +345,49 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     ctx.arcTo(x, y + h, x, y, r);
     ctx.arcTo(x, y, x + w, y, r);
     ctx.closePath();
+  }
+
+  // *** TRAFFIC LIGHT STATE ***
+  let redLightOn = true;
+  let greenLightOn = false;
+  let preStartPhase = true; // In red-light period
+  let falseStartResolved = false;
+
+  let redLightDuration = 0;
+  let redLightStartTime = 0;
+
+  function beginRedLightPhase() {
+    preStartPhase = true;
+    falseStartResolved = false;
+    redLightOn = true;
+    greenLightOn = false;
+    redLightDuration = 2000 + Math.random()*3000;
+    redLightStartTime = Date.now();
+  }
+
+  beginRedLightPhase();
+
+  function updateTrafficLight() {
+    if (preStartPhase) {
+      if (Date.now() - redLightStartTime >= redLightDuration) {
+        redLightOn = false;
+        greenLightOn = true;
+        preStartPhase = false;
+      }
+    }
+  }
+
+  function drawTrafficLight() {
+    const y = H()*0.92;
+    const x = W()*0.3;
+    ctx.save();
+    ctx.fillStyle = '#333';
+    ctx.fillRect(x, y, 200, 30);
+    ctx.fillStyle = redLightOn ? '#ff0000' : '#440000';
+    ctx.beginPath(); ctx.arc(x+50, y+15, 10, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = greenLightOn ? '#00ff00' : '#003300';
+    ctx.beginPath(); ctx.arc(x+150, y+15, 10, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
   }
 
   // draw entire scene (background static + trains)
@@ -395,7 +426,6 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
           drawReindeer(r.x, r.y, t.player.color);
         }
       }
-
       // car with Santa
       if (t.car.x > -300 && t.car.x < W() + 300) {
         drawCarWithSanta(t.car.x, t.car.y, t.player.color, t.player.accent);
@@ -412,12 +442,14 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     ctx.fillText(`${players[1].name} (P) — GREEN`, 200, 22);
     ctx.fillStyle = players[1].color; ctx.fillRect(200,26,48,6);
     ctx.restore();
+
+    drawTrafficLight();
   }
 
   // Game ticking: movement ticks every 50ms, acceleration checks every 200ms
   let tickInterval = null;
-  const TICK_MS = 50; // movement tick (0.05s)
-  const ACCEL_CHECK_MS = 200; // acceleration check interval (0.2s)
+  const TICK_MS = 50;
+  const ACCEL_CHECK_MS = 200;
   let raceActive = false;
   let raceFinished = false;
 
@@ -426,25 +458,20 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     let accelAccumulator = 0;
     tickInterval = setInterval(() => {
       // movement tick
-      for (let t of trains) {
-        t.move();
-      }
+      for (let t of trains) t.move();
       accelAccumulator += TICK_MS;
       if (accelAccumulator >= ACCEL_CHECK_MS) {
         // perform acceleration checks
-        for (let t of trains) {
-          t.maybeAccelerate();
-        }
+        for (let t of trains) t.maybeAccelerate();
         accelAccumulator = 0;
       }
 
       // after movement check finishes - evaluate both before updating records to detect ties
       const fx = finishX();
-      const finishedFlags = trains.map(t => !t.finished && t.frontX() >= fx ? true : false);
+      const finishedFlags = trains.map(t => !t.finished && t.frontX() >= fx);
       // There are three possibilities: none, one, or both finished this tick
       if (!raceFinished) {
         if (finishedFlags[0] && finishedFlags[1]) {
-          // tie
           raceFinished = true;
           trains[0].finished = trains[1].finished = true;
           trains[0].finishTime = trains[1].finishTime = Date.now();
@@ -467,6 +494,27 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     if (tickInterval) { clearInterval(tickInterval); tickInterval = null; }
   }
 
+  function resolveFalseStart(offender) {
+    falseStartResolved = true;
+    raceFinished = true;
+    stopTickLoop();
+    const r1 = loadRec(players[0].recKey);
+    const r2 = loadRec(players[1].recKey);
+    if (offender === 'both') {
+      r1[2] += 1; r2[2] += 1;
+      msgEl.innerText = 'TIE! Both racers false-started.';
+    } else if (offender === 'p1') {
+      r1[1] += 1; r2[0] += 1;
+      msgEl.innerText = `${players[1].name} WINS! (False start by ${players[0].name})`;
+    } else if (offender === 'p2') {
+      r2[1] += 1; r1[0] += 1;
+      msgEl.innerText = `${players[0].name} WINS! (False start by ${players[1].name})`;
+    }
+    saveRec(players[0].recKey, r1);
+    saveRec(players[1].recKey, r2);
+    updateRecordDisplays();
+  }
+
   function handleRaceEnd(result) {
     // update records depending on result
     const r1 = loadRec(players[0].recKey);
@@ -484,37 +532,36 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     saveRec(players[0].recKey, r1);
     saveRec(players[1].recKey, r2);
     updateRecordDisplays();
-    // stop tick loop (optional) - keep it running left to user but we'll stop to be tidy
     stopTickLoop();
   }
 
-  // Controls: start buttons and keyboard (single-tap start)
-  btn1.addEventListener('click', ()=> {
-    if (!trains[0].started && !trains[0].finished) {
-      trains[0].start();
-      if (!raceFinished) startTickLoop();
+  function attemptStart(playerIndex) {
+    const t = trains[playerIndex];
+    if (t.finished || t.started) return;
+    if (preStartPhase && redLightOn && !falseStartResolved) {
+      if (!trains[0].started && !trains[1].started) {
+        resolveFalseStart(playerIndex===0 ? 'p1' : 'p2');
+      } else {
+        if (playerIndex===0 && trains[1].started) resolveFalseStart('p1');
+        else if (playerIndex===1 && trains[0].started) resolveFalseStart('p2');
+        else resolveFalseStart('both');
+      }
+      return;
     }
-  });
-  btn2.addEventListener('click', ()=> {
-    if (!trains[1].started && !trains[1].finished) {
-      trains[1].start();
-      if (!raceFinished) startTickLoop();
-    }
-  });
+    t.start();
+    if (!raceFinished && tickInterval===null) startTickLoop();
+  }
+
+  btn1.addEventListener('click', ()=> attemptStart(0));
+  btn2.addEventListener('click', ()=> attemptStart(1));
 
   window.addEventListener('keydown', (e) => {
     const key = e.key.toLowerCase();
     if (key === players[0].key) {
-      if (!trains[0].started && !trains[0].finished) {
-        trains[0].start();
-        if (!raceFinished) startTickLoop();
-      }
+      attemptStart(0);
       e.preventDefault();
     } else if (key === players[1].key) {
-      if (!trains[1].started && !trains[1].finished) {
-        trains[1].start();
-        if (!raceFinished) startTickLoop();
-      }
+      attemptStart(1);
       e.preventDefault();
     } else if (key === 'r') {
       resetRace();
@@ -532,6 +579,7 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     msgEl.innerText = '';
     // restart tick loop only if any racer already started (rare) - otherwise stop ticks
     stopTickLoop();
+    beginRedLightPhase();
     render();
   }
   resetRaceBtn.addEventListener('click', resetRace);
@@ -551,6 +599,7 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
 
   // animation loop (render as frequently as possible; movement is updated on tick intervals)
   function animate() {
+    updateTrafficLight();
     render();
     requestAnimationFrame(animate);
   }
@@ -570,7 +619,6 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     }
     render();
   });
-
 })();
 </script>
 </body>

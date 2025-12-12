@@ -42,7 +42,7 @@ Notes v6: removed some UI elements. Got rid of direction and details on how game
 rid of notes on how to restart. Quick and easy.
 
 
-version 7	16 elements dev	2 minutes code gen	2 minutes test		1 hour 54
+version 7	16 minutes dev	2 minutes code gen	2 minutes test		1 hour 54
 
 Notes v7: the weird appearances of 2 different Santas on each vehicle was annoying. Further,
 it was annoying I liked the location of 1 Santa (inside the car) and the depiction of the
@@ -52,8 +52,17 @@ manual change to tweak the vertical placement in the car. Very happy! Next will 
 set-go lights to start the race. I'm nervous!
 
 
-TODO There should be the rule for a red/green flag to start
-TODO Get a cooler version of the title up top
+version 8	21 minutes dev	1 minute code gen	3 minutes test		2 hours 19
+
+Notes v8: this is the first version I view as the complete game. It took some time to provide
+the description for the red and green light, how long to turn from red to green, and the rules
+around starting when red. But it passed, first try! There was a cosmetic fix: the Santa in the
+car switched back to the original I did not like. Referring the prior version, and easy fix.
+Going forward, I think we will be look at UI. I don't see any functional changes.
+
+
+TODO Get a cooler version of the title up top. Impact is the name of the font.
+TODO The red/green lights are a bit small and off-center. Could use improvement.
 
 MAYBE Show live velocities (pixels/0.1s) next to each players name
 MAYBE Sound effect on start/finish
