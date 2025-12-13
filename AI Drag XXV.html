@@ -378,15 +378,17 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
   }
 
   function drawTrafficLight() {
-    const y = H()*0.92;
-    const x = W()*0.3;
+    const boxW = 200;
+    const boxH = 60; // twice as tall
+    const y = H()*0.92 - boxH/2;
+    const x = (W() - boxW) / 2; // center horizontally
     ctx.save();
     ctx.fillStyle = '#333';
-    ctx.fillRect(x, y, 200, 30);
+    ctx.fillRect(x, y, boxW, boxH);
     ctx.fillStyle = redLightOn ? '#ff0000' : '#440000';
-    ctx.beginPath(); ctx.arc(x+50, y+15, 10, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+50, y+boxH/2, 20, 0, Math.PI*2); ctx.fill();
     ctx.fillStyle = greenLightOn ? '#00ff00' : '#003300';
-    ctx.beginPath(); ctx.arc(x+150, y+15, 10, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+150, y+boxH/2, 20, 0, Math.PI*2); ctx.fill();
     ctx.restore();
   }
 

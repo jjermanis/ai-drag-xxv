@@ -61,8 +61,17 @@ car switched back to the original I did not like. Referring the prior version, a
 Going forward, I think we will be look at UI. I don't see any functional changes.
 
 
+version 9	8 minutes dev	1 minute code gen	2 minutes test		2 hours 30
+
+Notes v9: increased the size of the lights and moved it more to the center. The first attempt
+worked! The initial code from Chat did some code formatting changes and comments. I just took 
+the updated function for the light rendering (drawTrafficLight) and replaced only that.
+I'd say this is the first version that is truly releasable for others to play. I want to
+change the title UI up-top... and I think that will be it! At least, for a first version for
+others to play with.
+
+
 TODO Get a cooler version of the title up top. Impact is the name of the font.
-TODO The red/green lights are a bit small and off-center. Could use improvement.
 
 MAYBE Show live velocities (pixels/0.1s) next to each players name
 MAYBE Sound effect on start/finish
