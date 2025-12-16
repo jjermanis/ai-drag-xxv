@@ -71,9 +71,22 @@ change the title UI up-top... and I think that will be it! At least, for a first
 others to play with.
 
 
-TODO Get a cooler version of the title up top. Impact is the name of the font.
+version 10	10 minutes dev	1 minute code gen	4 minutes test		2 hours 45
 
+Notes v10: two changes. One, I changed the title up-top. Chat create something more involved.
+Switched to Impact font (my choice) as initial change. It added a metallic look, by changing 
+colors down the line. I added some color adjustments to make the color ting green. Two, I 
+removed the lines toward the bottom the identify the players with a text description. Easy 
+removal; it provided little value while taking some space. 
+Not sure what changes are needed next!
+
+
+MAYBE A slightly different color of snow? With a hint of blue? Something to help Santa's hat top more visible
 MAYBE Show live velocities (pixels/0.1s) next to each players name
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
+MAYBE ChatGPT said "A stronger chrome look"
+MAYBE ChatGPT said "A checker-flag stroke"
+MAYBE ChatGPT said "Or motion blur / speed slant"
+MAYBE ChatGPT said "Make reindeer sprites more detailed or add simple animation for their legs."
 

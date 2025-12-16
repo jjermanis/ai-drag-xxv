@@ -3,7 +3,7 @@ Create a single-page app in a single HTML file with the following requirements:
 - Goal: get your Santa Claus (with his reindeer and drag racer) across the finish line
 - the screen is primarily white, like snow. 
 - There is a pine forest at the top of the screen, in the background. The pine forest does not move at all in the game.
-- the top of the screen is centered and says Drag Race XXV!!!
+- the top of the screen is centered and says "Drag Race XXV". The font should give a metallic green-tinted look.
 - there are two racing Santa Clauses on the screen.
 - there is a finish line on the right side of the screen.
 - at the bottom of the snow screen are two lights: red and green. It looks like a traffic light, but laid on the ground horizontal.
