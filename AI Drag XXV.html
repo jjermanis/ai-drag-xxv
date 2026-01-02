@@ -423,19 +423,19 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
 
     // draw finish line (right)
     const fx = finishX();
-    ctx.fillStyle = '#222'; ctx.fillRect(fx-6, 6, 8, H()-12);
+    ctx.fillStyle = '#222'; ctx.fillRect(fx-6, 116, 8, H()-122);
     // checkered banner vertical panels
     const bw = 18, bh = 28;
-    const bannerTop = H()*0.18;
+    const bannerTop = H()*0.4;
     for (let y = bannerTop; y < H()*0.9; y += bh) {
       for (let i=0;i<3;i++){
-        ctx.fillStyle = ((i + Math.floor(y/bh)) % 2===0) ? '#fff' : '#000';
+        ctx.fillStyle = ((i + Math.floor(y/bh)) % 2===0) ? '#000' : '#fff';
         ctx.fillRect(fx + 8 + i*bw, y, bw, bh);
       }
     }
     // FINISH text rotated
-    ctx.save(); ctx.translate(fx + 28, H()*0.16); ctx.rotate(Math.PI/2);
-    ctx.fillStyle = '#333'; ctx.font = '700 14px sans-serif'; ctx.fillText('FINISH', 0, 0); ctx.restore();
+    ctx.save(); ctx.translate(fx + 30, H()*0.4); ctx.rotate(Math.PI/2);
+    ctx.fillStyle = '#555'; ctx.font = '700 14px sans-serif'; ctx.fillText('FINISH', 0, 0); ctx.restore();
 
     // draw trains
     for (let t of trains) {

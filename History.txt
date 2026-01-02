@@ -81,12 +81,29 @@ removal; it provided little value while taking some space.
 Not sure what changes are needed next!
 
 
-MAYBE A slightly different color of snow? With a hint of blue? Something to help Santa's hat top more visible
+version 11	12 minutes dev	0 minutes code gen	3 minutes test		3 hours 0
+
+Notes v11: after the holidays, going for some basic changes. Today, it's fixing the finish
+line. It's too tall/long, and goes over the trees. It needs to just go over standard snow.
+I asked Chat where that skinny line drawing was defined. It did that correctly. I tried
+it manually. It took 3 times to get it where I liked. Zero code builds needed - tweaked
+HTML, and reloaded page. After that, moved over to the checkered flag pattern to its right.
+I didn't need chat to find that code: it was directly after the line. I changed that after a
+couple of trials. Finally, there was the FINISH text on that line. Again, no Chat needed: that
+was directly after the checkered flag. I moved it down. I moved it over a hair to the right, 
+and I lightened the color to make it appear more clearly on black and white flag.
+
+
+MAYBE A slightly different color of snow? With a hint of blue? Something to help Santa's hat top 
+	be more visible. Existing "front" snow color: F4F8FF. Snow in back is FFFFFF.
+	Maybe F0F4FF?
 MAYBE Show live velocities (pixels/0.1s) next to each players name
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
+MAYBE ties aren't QUITE right. It appear if they cross the finish in the same frame, it is a tie
+	even if one them was ahead. MAYBE fix it? It's good as-is.
+MAYBE ChatGPT said "Make reindeer sprites more detailed or add simple animation for their legs."
 MAYBE ChatGPT said "A stronger chrome look"
 MAYBE ChatGPT said "A checker-flag stroke"
 MAYBE ChatGPT said "Or motion blur / speed slant"
-MAYBE ChatGPT said "Make reindeer sprites more detailed or add simple animation for their legs."
 
