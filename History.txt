@@ -94,9 +94,17 @@ was directly after the checkered flag. I moved it down. I moved it over a hair t
 and I lightened the color to make it appear more clearly on black and white flag.
 
 
-MAYBE A slightly different color of snow? With a hint of blue? Something to help Santa's hat top 
-	be more visible. Existing "front" snow color: F4F8FF. Snow in back is FFFFFF.
-	Maybe F0F4FF?
+version 12	2 minutes dev	0 minutes code gen	1 minute test		3 hours 3
+
+Notes v12: the color between the snow (RBG: F4F8FF) and the Santa clothing edges (FFFFFF)
+was very similar. It made it difficult to see hat tips against that snow. I went to
+darken the snow a touch, keeping it slightly blue, to add contrast and keep snow looking
+normal. I changed the snow slightly to F0F4FF. Nice mix - snow looks quite white; there  
+is sufficient contract with the hat tip. While I was looking at code, I noticed that
+the sky leaned green. Looked OK, but maybe a bit odd. Changed the sky to blue - made it
+darker than before, to better contrast it with the snow.
+
+
 MAYBE Show live velocities (pixels/0.1s) next to each players name
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins

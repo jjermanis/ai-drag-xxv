@@ -226,7 +226,7 @@ h1 {
     // Pine forest at top - static (we do not animate or move it)
     const topH = Math.max(80, H()*0.22);
     // sky / top strip
-    ctx.fillStyle = '#f2faf2';
+    ctx.fillStyle = '#dadaff';
     ctx.fillRect(0,0,W(), topH);
     // draw many pines (no time-based motion)
     const pineCount = Math.ceil(W()/36) + 6;
@@ -237,7 +237,7 @@ h1 {
       drawPine(baseX, baseY, height);
     }
     // horizon hill
-    ctx.fillStyle = '#f4f8ff';
+    ctx.fillStyle = '#f0f4ff';
     ctx.beginPath();
     ctx.moveTo(0, H()*0.3 + 18);
     ctx.quadraticCurveTo(W()*0.4, H()*0.22, W(), H()*0.3 + 24);
