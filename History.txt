@@ -105,7 +105,23 @@ the sky leaned green. Looked OK, but maybe a bit odd. Changed the sky to blue - 
 darker than before, to better contrast it with the snow.
 
 
-MAYBE Show live velocities (pixels/0.1s) next to each players name
+version 14	24 minutes dev	0 minutes code gen	7 minutes test		3 hours 34
+
+Notes v14: added the display of Santa's velocities. Started with a way to layout the names 
+on the top of the screen. Moved the 2nd player to the middle of the screen to make sure that
+there is plenty of space for both. Next, asked Chat how to add a speed to the UI. It asked how
+I wanted to calculate the speed. Truly, there is no precision needed: something between 
+100-200 mph would look fine. It started by multiplying each players velocity by 10. That actually
+WAS pretty good as-is. The only thing is since it is by 10, all speeds are evenly divisible by 10.
+I changed it to 7. A little slower, but still fast (speeds end around 150-ish) and not easy to
+see the pattern (it's there if you want but not easy). I tried to further tweak by adding a 
+small random number to make it look even more "real". There were multiple issues. I had to 
+"freeze" that random number at the beginning and end of the match. And the jumpiness didn't help 
+that much. Ended with the easy multiply by 7. After that, the layout of the names was OK, but 
+difficult to see both of their speeds. Instead of side-by-side, went one player's data of top 
+the other. Not perfect (numbers do not line up vertically) but better.
+
+ 
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
 MAYBE ties aren't QUITE right. It appear if they cross the finish in the same frame, it is a tie

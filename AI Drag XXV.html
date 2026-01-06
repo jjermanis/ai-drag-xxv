@@ -459,11 +459,13 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     ctx.save();
     ctx.font = '700 13px sans-serif';
     ctx.fillStyle = '#333';
-    ctx.fillText(`${players[0].name} (Q) — RED`, 12, 22);
+    const p1Speed = trains[0].velocityUnits * 7;
+    ctx.fillText(`${players[0].name} (Q) — RED — ${p1Speed} MPH`, 12, 22);
     ctx.fillStyle = players[0].color; ctx.fillRect(12,26,48,6);
     ctx.fillStyle = '#333';
-    ctx.fillText(`${players[1].name} (P) — GREEN`, 200, 22);
-    ctx.fillStyle = players[1].color; ctx.fillRect(200,26,48,6);
+    const p2Speed = trains[1].velocityUnits * 7;
+    ctx.fillText(`${players[1].name} (P) — GREEN — ${p2Speed} MPH`, 12, 48);
+    ctx.fillStyle = players[1].color; ctx.fillRect(12, 52, 48, 6);
     ctx.restore();
 
     drawTrafficLight();

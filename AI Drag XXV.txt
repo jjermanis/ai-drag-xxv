@@ -4,6 +4,10 @@ Create a single-page app in a single HTML file with the following requirements:
 - the screen is primarily white, like snow. 
 - There is a pine forest at the top of the screen, in the background. The pine forest does not move at all in the game.
 - the top of the screen is centered and says "Drag Race XXV". The font should give a metallic green-tinted look.
+- a description of each player should be shown on the top of the screen. The red player description starts on the left edge of the 
+screen, and the green player description starts below the red player.
+- each player description shows their name, the key they use to control that sled, the color of that sled, and the current speed
+in MPH.
 - there are two racing Santa Clauses on the screen.
 - there is a finish line on the right side of the screen.
 - at the bottom of the snow screen are two lights: red and green. It looks like a traffic light, but laid on the ground horizontal.
@@ -18,6 +22,7 @@ Player 2 uses the letter P.
 - When they accelerate, they start at a velocity of 1 pixel every 0.05 seconds. Every 0.2 seconds, there is an 80% chance it gets
 faster. If it gets faster, velocity increases 1 pixel more every 0.05 seconds. If it does not get faster, it stays the same
 velocity.
+- the speed for each player is (pixels every 0.05 seconds) times 7.
 - if one of the players tries to start their drag racer while the red light is on, they lose. The person who starts loses, and the
 other player wins. The race is over - they need to restart for the next race.
 - if both players start at the same time with a red light, they are tied. Both players get a tie. 
