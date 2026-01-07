@@ -167,8 +167,8 @@ h1 {
       // car left of reindeer line
       const carX = RIGHTMOST_VISIBLE_REX - REINDEER*RE_SPACING - 18 - CAR_WIDTH;
       this.car = { x: carX, y: laneY };
-      // velocity unit is pixels per movement tick (tick = 0.05s). Start at 0 until started.
-      this.velocityUnits = 0; // pixels per tick (0.05s)
+      // velocity unit is pixels per movement tick (tick = 0.025s). Start at 0 until started.
+      this.velocityUnits = 0; // pixels per tick (0.025s)
       this.started = false;
       this.finished = false;
       this.finishTime = null;
@@ -189,20 +189,20 @@ h1 {
     start() {
       if (this.started || this.finished) return;
       this.started = true;
-      this.velocityUnits = 1;
+      this.velocityUnits = 0.25;
     }
-    // move called every movement tick (50ms)
+    // move called every movement tick (25ms)
     move() {
       if (!this.started || this.finished) return;
       const dx = this.velocityUnits; // pixels per tick
       for (let r of this.reindeer) r.x += dx;
       this.car.x += dx;
     }
-    // called on acceleration check (every 200ms)
+    // called on acceleration check (every 100ms)
     maybeAccelerate() {
       if (!this.started || this.finished) return;
       if (Math.random() < 0.8) {
-        this.velocityUnits += 1;
+        this.velocityUnits += 0.25;
       }
     }
   }
@@ -459,11 +459,11 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     ctx.save();
     ctx.font = '700 13px sans-serif';
     ctx.fillStyle = '#333';
-    const p1Speed = trains[0].velocityUnits * 7;
+    const p1Speed = Math.floor(trains[0].velocityUnits * 14);
     ctx.fillText(`${players[0].name} (Q) — RED — ${p1Speed} MPH`, 12, 22);
     ctx.fillStyle = players[0].color; ctx.fillRect(12,26,48,6);
     ctx.fillStyle = '#333';
-    const p2Speed = trains[1].velocityUnits * 7;
+    const p2Speed = Math.floor(trains[1].velocityUnits * 14);
     ctx.fillText(`${players[1].name} (P) — GREEN — ${p2Speed} MPH`, 12, 48);
     ctx.fillStyle = players[1].color; ctx.fillRect(12, 52, 48, 6);
     ctx.restore();
@@ -471,10 +471,10 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     drawTrafficLight();
   }
 
-  // Game ticking: movement ticks every 50ms, acceleration checks every 200ms
+  // Game ticking: movement ticks every 25ms, acceleration checks every 100ms
   let tickInterval = null;
-  const TICK_MS = 50;
-  const ACCEL_CHECK_MS = 200;
+  const TICK_MS = 25;
+  const ACCEL_CHECK_MS = 100;
   let raceActive = false;
   let raceFinished = false;
 

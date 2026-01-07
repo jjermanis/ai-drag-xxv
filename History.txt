@@ -121,6 +121,18 @@ that much. Ended with the easy multiply by 7. After that, the layout of the name
 difficult to see both of their speeds. Instead of side-by-side, went one player's data of top 
 the other. Not perfect (numbers do not line up vertically) but better.
 
+
+version 15	13 minutes dev	0 minutes code gen	6 minutes test		3 hours 53
+
+Notes v15: moved from 20 to 40 frames per second. I am VERY happy with how this looks. It is
+the difference maker: looks very smooth now. The basis was change of MS per move from 50 to 25. 
+To adjust for more frequent moves, dropped the increment on velocity in half. Finally,
+increased the "MPH calculation" to double. This works well. Since this change was made, I
+doubled the rate of acceleration checks. Went from checking every 200ms to 100ms. Increment
+in velocity got halved AGAIN. Finally, I used Math.floor() on the display speed, since you
+can get decimal values here. Average speeds in the races remain the same, with smoothness for
+both accelerations and animation.
+
  
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins

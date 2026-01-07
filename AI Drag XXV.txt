@@ -10,7 +10,7 @@ screen, and the green player description starts below the red player.
 in MPH.
 - there are two racing Santa Clauses on the screen.
 - there is a finish line on the right side of the screen.
-- at the bottom of the snow screen are two lights: red and green. It looks like a traffic light, but laid on the ground horizontal.
+- at the bottom of the snow screen are two lights: red and green. It looks like a traffic light, but laid on the ground horizontally.
 - at the start of each race, the red light is on and the green light is off. The red light will be on randomly before the race, 
 for 2 to 5 seconds. After that, the red light turns off and the green light turns on.
 - a Santa Claus is a racing Santa Claus. Starting on the right, there is a line of 8 reindeer. They are connected with
@@ -19,10 +19,10 @@ drag racer car. Inside the car is a Santa Claus.
 - there are two players in this game. Each player has a button that starts the drag racer. They tap their button to start
 racing. They do not need to hold the button - if they tap, their drag racer will continue to accelerate. Player 1 uses the letter Q.
 Player 2 uses the letter P. 
-- When they accelerate, they start at a velocity of 1 pixel every 0.05 seconds. Every 0.2 seconds, there is an 80% chance it gets
-faster. If it gets faster, velocity increases 1 pixel more every 0.05 seconds. If it does not get faster, it stays the same
-velocity.
-- the speed for each player is (pixels every 0.05 seconds) times 7.
+- When they accelerate, they start at a velocity of 0.5 pixels every 25 milliseconds. Every 100 milliseconds, there is an 80% chance 
+it gets faster. If it gets faster, velocity increases 0.5 pixels more every 25 milliseconds. If it does not get faster, it stays the 
+same velocity.
+- the speed for each player is (pixels every 25 milliseconds) times 14.
 - if one of the players tries to start their drag racer while the red light is on, they lose. The person who starts loses, and the
 other player wins. The race is over - they need to restart for the next race.
 - if both players start at the same time with a red light, they are tied. Both players get a tie. 
