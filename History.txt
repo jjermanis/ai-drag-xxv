@@ -1,3 +1,6 @@
+Version 10 is Release #1
+
+
 version 1	15 minutes dev	2 minutes code gen	2 minutes test		19 minutes total
 
 Notes v1: I went for a basic version. Definitely not a finished product, but not bad! Surprising,
@@ -80,6 +83,8 @@ removed the lines toward the bottom the identify the players with a text descrip
 removal; it provided little value while taking some space. 
 Not sure what changes are needed next!
 
+Version 10 is release #1
+
 
 version 11	12 minutes dev	0 minutes code gen	3 minutes test		3 hours 0
 
@@ -133,12 +138,31 @@ in velocity got halved AGAIN. Finally, I used Math.floor() on the display speed,
 can get decimal values here. Average speeds in the races remain the same, with smoothness for
 both accelerations and animation.
 
- 
+
+version 16	35 minutes day	1 minute code gen	10 minutes test		4 hours 39
+
+Notes v16: the reindeer legs now move to provide a better illustration. This ended up being
+challenging. Chat offered to move the legs for racing - I accepted one option it said it
+could do. The app now keeps track of a timer.  It would then, for each reindeer crew, adjust the 
+legs based on the current speed and that timer tracker. This worked as advertised, but had some 
+side effects. 
+The reindeer start quite slow and get quite fast. It would start to get legs into cycles, multiple 
+times. It was not a good look. To resolve, I added the effect (my code) that after a certain 
+speed, the reindeer would lift and raise their legs like they are flying.
+Also, there were a couple defects I needed to fix from the Chat generated code. After each race,
+the legs would start in a different location. That I reset to 0. Also, it would start moving 
+legs at the start of a race, even at a speed of 0. I added a special case to not move the legs at 
+0 speed. After fixing these issues, it was not perfect but good. It was quite a bit of manual 
+effort and testing to get the leg movement to look it best. Lots of manual work was needed, 
+though I give Chat credit for creating code that was easy to tweak to change the UI.
+
+
+TODO does the anim counter help with the leg steps? It is unclear. Try it without, see.
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
 MAYBE ties aren't QUITE right. It appear if they cross the finish in the same frame, it is a tie
 	even if one them was ahead. MAYBE fix it? It's good as-is.
-MAYBE ChatGPT said "Make reindeer sprites more detailed or add simple animation for their legs."
+MAYBE ChatGPT said "Make reindeer sprites more detailed"
 MAYBE ChatGPT said "A stronger chrome look"
 MAYBE ChatGPT said "A checker-flag stroke"
 MAYBE ChatGPT said "Or motion blur / speed slant"

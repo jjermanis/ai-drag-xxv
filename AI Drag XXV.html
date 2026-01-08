@@ -273,29 +273,84 @@ h1 {
   }
 
   // reindeer drawing
-  function drawReindeer(x,y,color){
+  function drawReindeer(x, y, color, speed = 0) {
     ctx.save();
-    ctx.translate(x,y);
+    ctx.translate(x, y);
+
+    // animation phase (faster speed = faster legs)
+    const phase = animTick * Math.max(0.15, speed * 0.11);
+    let legSwing = 8;
+    let isFloating = false;
+    if (speed < 0.05)
+    	legSwing = 0;
+    else if (speed < 7)
+    	legSwing = Math.sin(phase) * 6;
+    else
+        isFloating = true;
+
     // body
     ctx.fillStyle = '#8d5a33';
     ctx.beginPath();
-    ctx.ellipse(0,0,14,9,0,0,Math.PI*2); ctx.fill();
+    ctx.ellipse(0, 0, 14, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+
     // neck + head
-    ctx.fillRect(10,-8,18,6);
-    ctx.beginPath(); ctx.ellipse(26,-6,8,6,0,0,Math.PI*2); ctx.fill();
+    ctx.fillRect(10, -8, 18, 6);
+    ctx.beginPath();
+    ctx.ellipse(26, -6, 8, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
     // eye
-    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(28,-7,1.6,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle = '#4a2e1b'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(30,-12);
-    ctx.lineTo(34,-20); ctx.moveTo(30,-12); ctx.lineTo(36,-14); ctx.stroke();
-    ctx.strokeStyle = '#6f4226'; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(-6,8); ctx.lineTo(-6,18);
-    ctx.moveTo(4,8); ctx.lineTo(4,18);
-    ctx.moveTo(14,8); ctx.lineTo(14,20);
-    ctx.moveTo(20,8); ctx.lineTo(20,20); ctx.stroke();
-    ctx.strokeStyle = color; ctx.lineWidth = 3.2; ctx.beginPath();
-    ctx.moveTo(-8,-2); ctx.lineTo(24,-2); ctx.stroke();
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(28, -7, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // antlers
+    ctx.strokeStyle = '#4a2e1b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(30, -12);
+    ctx.lineTo(34, -20);
+    ctx.moveTo(30, -12);
+    ctx.lineTo(36, -14);
+    ctx.stroke();
+
+    // legs (animated)
+    ctx.strokeStyle = '#6f4226';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    if (!isFloating)
+    {
+        ctx.moveTo(-6, 8); ctx.lineTo(-6 + legSwing, 18);
+        ctx.moveTo(4, 8);  ctx.lineTo(4 - legSwing, 18);
+        ctx.moveTo(14, 8); ctx.lineTo(14 + legSwing, 20);
+        ctx.moveTo(20, 8); ctx.lineTo(20 - legSwing, 20);
+    }
+    else
+    {
+        ctx.moveTo(-6, 8); ctx.lineTo(-6 - legSwing, 18);
+        ctx.moveTo(4, 8);  ctx.lineTo(4 - legSwing, 18);
+        ctx.moveTo(14, 8); ctx.lineTo(14 - legSwing, 20);
+        ctx.moveTo(20, 8); ctx.lineTo(20 - legSwing, 20);
+    }
+
+    ctx.stroke();
+
+    // harness
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3.2;
+    ctx.beginPath();
+    ctx.moveTo(-8, -2);
+    ctx.lineTo(24, -2);
+    ctx.stroke();
+
     // ring
-    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(-8,-2,3,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(-8, -2, 3, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.restore();
   }
 
@@ -446,7 +501,7 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
       for (let i=0;i<t.reindeer.length;i++){
         const r = t.reindeer[i];
         if (r.x > -200 && r.x < W() + 200) {
-          drawReindeer(r.x, r.y, t.player.color);
+          drawReindeer(r.x, r.y, t.player.color, t.velocityUnits);
         }
       }
       // car with Santa
@@ -477,11 +532,13 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
   const ACCEL_CHECK_MS = 100;
   let raceActive = false;
   let raceFinished = false;
+  let animTick = 0;
 
   function startTickLoop() {
     if (tickInterval) return;
     let accelAccumulator = 0;
     tickInterval = setInterval(() => {
+      animTick++;
       // movement tick
       for (let t of trains) t.move();
       accelAccumulator += TICK_MS;
@@ -607,6 +664,7 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     beginRedLightPhase();
     render();
   }
+  animTick = 0;
   resetRaceBtn.addEventListener('click', resetRace);
   canvas.addEventListener('dblclick', resetRace);
 
