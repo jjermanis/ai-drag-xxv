@@ -273,17 +273,17 @@ h1 {
   }
 
   // reindeer drawing
-  function drawReindeer(x, y, color, speed = 0) {
+  function drawReindeer(carX, x, y, color, speed = 0) {
     ctx.save();
     ctx.translate(x, y);
 
     // animation phase (faster speed = faster legs)
-    const phase = animTick * Math.max(0.15, speed * 0.11);
+    const phase = carX/4;
     let legSwing = 8;
     let isFloating = false;
     if (speed < 0.05)
     	legSwing = 0;
-    else if (speed < 7)
+    else if (speed < 6)
     	legSwing = Math.sin(phase) * 6;
     else
         isFloating = true;
@@ -501,7 +501,7 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
       for (let i=0;i<t.reindeer.length;i++){
         const r = t.reindeer[i];
         if (r.x > -200 && r.x < W() + 200) {
-          drawReindeer(r.x, r.y, t.player.color, t.velocityUnits);
+          drawReindeer(t.car.x, r.x, r.y, t.player.color, t.velocityUnits);
         }
       }
       // car with Santa
@@ -532,13 +532,11 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
   const ACCEL_CHECK_MS = 100;
   let raceActive = false;
   let raceFinished = false;
-  let animTick = 0;
 
   function startTickLoop() {
     if (tickInterval) return;
     let accelAccumulator = 0;
     tickInterval = setInterval(() => {
-      animTick++;
       // movement tick
       for (let t of trains) t.move();
       accelAccumulator += TICK_MS;
@@ -664,7 +662,6 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     beginRedLightPhase();
     render();
   }
-  animTick = 0;
   resetRaceBtn.addEventListener('click', resetRace);
   canvas.addEventListener('dblclick', resetRace);
 

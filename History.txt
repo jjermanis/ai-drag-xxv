@@ -157,7 +157,24 @@ effort and testing to get the leg movement to look it best. Lots of manual work 
 though I give Chat credit for creating code that was easy to tweak to change the UI.
 
 
-TODO does the anim counter help with the leg steps? It is unclear. Try it without, see.
+version 17	20 minutes day	0 minute code gen	6 minutes test		5 hours 5
+
+Notes v17: this relates directly to the previous change. In v16, it made the reindeer legs run.
+As part of that, Chat created an animTick counter to help with the leg steps. Was it necessary? 
+Well, it wasn't obvious that it was needed. We'll try without.
+I manually removed all the references to animTick and ran it. IT DID work. But the leg movement
+was very slow. That's because it was based off of the speed. Therefore, if the speed did not 
+change, the legs did not move. It means not only is it slow, but the movement would be linear. 
+Definitely not good. Basing leg movement on their X-position ought to work. As the reindeer 
+goes faster on the X-axis, the leg speed would increase.
+I tried that. It was close, but also looked odd. Easy to explain: each leg was in a different
+place. That meant that each leg was at a different phase. It looks odd.
+The final implementation was to base it on the x-position of the sleigh. THAT would be the same
+for each reindeer. Not only did it finally indicate that animTick wasn't needed... but does 
+actually look a bit better without it.
+
+
+
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
 MAYBE ties aren't QUITE right. It appear if they cross the finish in the same frame, it is a tie
