@@ -27,7 +27,7 @@ fairly small; all changes seemed directed toward the acceleration.
 version 4	20 minutes dev	2 minutes code gen	4 minutes test		1 hour 14 total
 
 Notes v4: try to have move compact action screen. It is better, to an extent. The are close, and 
-they take less space. Nad I give them credit - the line changes were very minor to this (3 lines
+they take less space. And I give them credit - the line changes were very minor to this (3 lines
 of code). But that are moved too far north (I do not want Player 1 shown over trees)
 and as a percentage, the bottom screen has too much useless. Would work better, really, just 
 dropping both team down quite a bit.
@@ -83,7 +83,7 @@ removed the lines toward the bottom the identify the players with a text descrip
 removal; it provided little value while taking some space. 
 Not sure what changes are needed next!
 
-Version 10 is release #1
+Version 10 is release #1 on 12/13/25
 
 
 version 11	12 minutes dev	0 minutes code gen	3 minutes test		3 hours 0
@@ -139,7 +139,7 @@ can get decimal values here. Average speeds in the races remain the same, with s
 both accelerations and animation.
 
 
-version 16	35 minutes day	1 minute code gen	10 minutes test		4 hours 39
+version 16	35 minutes dev	1 minute code gen	10 minutes test		4 hours 39
 
 Notes v16: the reindeer legs now move to provide a better illustration. This ended up being
 challenging. Chat offered to move the legs for racing - I accepted one option it said it
@@ -157,7 +157,7 @@ effort and testing to get the leg movement to look it best. Lots of manual work 
 though I give Chat credit for creating code that was easy to tweak to change the UI.
 
 
-version 17	20 minutes day	0 minute code gen	6 minutes test		5 hours 5
+version 17	20 minutes dev	0 minute code gen	6 minutes test		5 hours 5
 
 Notes v17: this relates directly to the previous change. In v16, it made the reindeer legs run.
 As part of that, Chat created an animTick counter to help with the leg steps. Was it necessary? 
@@ -173,13 +173,97 @@ The final implementation was to base it on the x-position of the sleigh. THAT wo
 for each reindeer. Not only did it finally indicate that animTick wasn't needed... but does 
 actually look a bit better without it.
 
+Version 17 is release #2 on 1/6/26
 
 
+version 18	15 minutes dev	1 minute code gen	3 minutes test		5 hours 24
+* NO BUILD *
+
+Notes v18: this was an attempt at improved reindeer drawing, the whole body. Previously,
+Chat had offered that it could "make reindeer sprites more detailed". It provided an update
+drawReindeer() function; all changes were there. To better exam, I applied them piece by
+piece. At the end, I did not see value. Some changes were marginally good (addition of neck)
+some were meaningless (could barely see added nostrils) some I did not like (square body).
+At the end, I discarded the changes. I'm not sure it looked better. I can see some would 
+consider worse, with added processing used on the drawing. 
+
+
+version 19	25 minutes dev	2 minutes code gen	4 minutes test		5 hours 55
+* NO BUILD *
+
+Notes v19: recently noticed that the very right edge of the game screen is. Not massive,
+not tiny. Maybe 80-ish pixels at the right side. I pointed out this issue, asked if Chat
+recognized it, and what changes it could make. As usual it made multiple approaches. One was
+to change the finish line from 110 to 40 pixels from the edge. That works... but doesn't 
+solve the problem of using the empty space. Maybe after the problem is fixed? It also 
+provides some change to the CSS layout. This appeared not to help. In fact, it seemed to
+increase the white space. Perhaps I made a code mistake? I asked for a Git-based approach.
+That also did not work, with different result. I asked for the entire version of the program.
+That did not work - even though I asked for code, it put comments in area that did not
+change. This was getting complicated to manage, and who knows it the approach would work.
+We leave this issue as identified. Will likely try a manual fix next time.
+Side note: this is the first open disappointment with the AI. The last 50 minutes of work
+yielded 0 acceptable lines of code.
+
+
+
+version 20	2 minutes dev	0 minutes code gen	1 minute test		5 hours 58
+
+To polish up the app, I added an emoji for the web site icon. I went for a Santa Claus icon.
+Easy to create, insert, and test.
+
+
+version 21	18 minutes dev	2 minute code gen	11 minute test		6 hours 29
+
+For multiple reasons, I am adding a significant new feature. It is to allow both two-player mode
+(the original) and one-player. This allows someone to play using the obvious case: sometimes
+there is only one available to play. Also, two-player mode is not likely to work on a tablet.
+On my iOS, it does not allow multiple clicks - there would prevent a race from being start well.
+Single player would be an option. 
+The documentation for this is fairly extensive:
+* Two new buttons to appear toward the lower-left corner of the game. 
+* The two new buttons are vertically aligned with the Reset Race and Clear Records buttons. 
+* The first button reads 1P. The second button reads 2P. 
+* The default state when then game starts is 2P. The game in 2P mode is exactly like it is now. 
+* When the 1P button is pressed, Player 2 (Nitro Nicolas) does not have controls for a person to play. 
+	When the 1P button is pressed, the 1st player is playing against the CPU. The green 
+	"Nitro Nicolas (P)" button towards the bottom is invisible. The button will not work. 
+	The P key will do nothing. 
+* When the race starts in 1P mode, the green player Nitro Nicolas starts 500ms after the green 
+	light starts the race. 
+* When the 2P button is pressed, it goes to the original mode, exactly like before. 
+It took several iterations to get this to work.
+#1 Was a massive mistake. It change massively. Originally version was 23k; the new version was
+6k. Obviously, multiple UI issues arose. I stopped immediately and tried again.
+#2 it provided the changes to make. That did not work. One of the changes referred to variables
+that did not exist. I did not want to play a guessing game. I sent the existing code and asked
+Chat to try again.
+#3 made the same mistake as #1 - the generated version was tiny. I asked it to try again. Not
+to send the whole updated program (that tremendously fails) and to put the deltas with clear
+details. This was much better. It had one line that was not clear - I asked Chat for details.
+That all... worked! To be clear there are several observed defects and changes that I see. But
+the game is playable in this mode.
+I will document it below, but these are the errors I saw:
+* The 1P/2P buttons are plain. Need more detail.
+* The Reset Race and Clear Record went to right margin. They should have remainder center.
+* Random variability should be used for Nicloas in 1P mode. Base it on typical human resources.
+
+
+
+TODO mobile attempt is made, add a Mobile status to README
+TODO Maybe add to the 1P/2P buttons. Spell them out? Add icons for each?
+TODO Reset Race and Clear Record went to right margin. They should have remainder center
+TODO Maybe try a random variability to when Nitro starts in 1P mode? Look up and see typical
+	human reflexes. It varies, but seems like 200-250ms are common for people. I lean 
+	toward 200-400ms to give a little help, and to help most players win sometimes.
+TODO deploy a hidden mode to the site to allow to try/test before publishing.
+TODO The rectangle for the game has a white rectangle at the far end of the game. Not trivial: 
+	maybe 50-100 pixels horizontal. Previous attempt via Chat did not work. Maybe try
+	manually at some point?
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
 MAYBE ties aren't QUITE right. It appear if they cross the finish in the same frame, it is a tie
 	even if one them was ahead. MAYBE fix it? It's good as-is.
-MAYBE ChatGPT said "Make reindeer sprites more detailed"
 MAYBE ChatGPT said "A stronger chrome look"
 MAYBE ChatGPT said "A checker-flag stroke"
 MAYBE ChatGPT said "Or motion blur / speed slant"

@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+
+<link rel="icon"
+href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+<text y='.9em' font-size='90'>🎅</text>
+</svg>">
+
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Drag Race XXV</title>
@@ -77,11 +84,16 @@ h1 {
 
     <div id="message"></div>
 
-    <div id="tools">
-      <button class="tool-btn" id="resetRace">Reset Race</button>
-      <button class="tool-btn" id="clearRecords">Clear Records</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+      <div>
+        <button class="tool-btn" id="mode1P">1P</button>
+        <button class="tool-btn" id="mode2P">2P</button>
+      </div>
+      <div id="tools">
+        <button class="tool-btn" id="resetRace">Reset Race</button>
+        <button class="tool-btn" id="clearRecords">Clear Records</button>
+      </div>
     </div>
-  </div>
 
 <script>
 (() => {
@@ -135,8 +147,33 @@ h1 {
   const rec1El = document.getElementById('rec1');
   const rec2El = document.getElementById('rec2');
   const msgEl = document.getElementById('message');
+  const mode1Btn = document.getElementById('mode1P');
+  const mode2Btn = document.getElementById('mode2P');
   const resetRaceBtn = document.getElementById('resetRace');
   const clearRecordsBtn = document.getElementById('clearRecords');
+  const panel2 = document.getElementById('btn2').closest('.panel');
+
+let gameMode = '2P';
+
+  function updateModeUI() {
+    if (gameMode === '1P') {
+      panel2.style.display = 'none';
+    } else {
+      panel2.style.display = '';
+    }
+  }
+
+  mode1Btn.addEventListener('click', () => {
+    gameMode = '1P';
+    updateModeUI();
+    resetRace();
+  });
+
+  mode2Btn.addEventListener('click', () => {
+    gameMode = '2P';
+    updateModeUI();
+    resetRace();
+  });
 
   // update record displays
   function updateRecordDisplays() {
@@ -449,6 +486,13 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
         redLightOn = false;
         greenLightOn = true;
         preStartPhase = false;
+
+        // CPU START (only in 1P)
+        if (gameMode === '1P') {
+          setTimeout(() => {
+            attemptStart(1);
+          }, 500);
+        }
       }
     }
   }
@@ -629,11 +673,20 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
       return;
     }
     t.start();
+
+    if (gameMode === '1P' && playerIndex === 0 && !trains[1].started) {
+      setTimeout(() => {
+        attemptStart(1);
+      }, 500);
+    }
+
     if (!raceFinished && tickInterval===null) startTickLoop();
   }
 
   btn1.addEventListener('click', ()=> attemptStart(0));
-  btn2.addEventListener('click', ()=> attemptStart(1));
+  btn2.addEventListener('click', ()=> {
+    if (gameMode === '2P') attemptStart(1);
+  });
 
   window.addEventListener('keydown', (e) => {
     const key = e.key.toLowerCase();
@@ -641,7 +694,7 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
       attemptStart(0);
       e.preventDefault();
     } else if (key === players[1].key) {
-      attemptStart(1);
+      if (gameMode === '2P') attemptStart(1);
       e.preventDefault();
     } else if (key === 'r') {
       resetRace();
