@@ -213,7 +213,7 @@ To polish up the app, I added an emoji for the web site icon. I went for a Santa
 Easy to create, insert, and test.
 
 
-version 21	18 minutes dev	2 minute code gen	11 minute test		6 hours 29
+version 21	18 minutes dev	2 minutes code gen	11 minutes test		6 hours 29
 
 For multiple reasons, I am adding a significant new feature. It is to allow both two-player mode
 (the original) and one-player. This allows someone to play using the obvious case: sometimes
@@ -249,13 +249,21 @@ I will document it below, but these are the errors I saw:
 * Random variability should be used for Nicloas in 1P mode. Base it on typical human resources.
 
 
+version 22	4 minutes dev	1 minute code gen	11 minutes test		6 hours 45
+
+To start of with fixing the 1P issues, I started with some randomization of the delay before 
+Nicolas starts. There appeared to be an issue in the initial code. Chat recommended to change
+the code in one place. But... there are two places where it is sent. I sent Chat the latest
+code again. It said that one of those place was not needed. It's a very simple change now.
+Initially, I went for 200+(random between 0 and 200)ms. You know... I liked that lot. 
+I played 20 times. The human controlled player won 12, and the CPU player won 8. That is 
+reasonably close.
+
+
 
 TODO mobile attempt is made, add a Mobile status to README
 TODO Maybe add to the 1P/2P buttons. Spell them out? Add icons for each?
 TODO Reset Race and Clear Record went to right margin. They should have remainder center
-TODO Maybe try a random variability to when Nitro starts in 1P mode? Look up and see typical
-	human reflexes. It varies, but seems like 200-250ms are common for people. I lean 
-	toward 200-400ms to give a little help, and to help most players win sometimes.
 TODO deploy a hidden mode to the site to allow to try/test before publishing.
 TODO The rectangle for the game has a white rectangle at the far end of the game. Not trivial: 
 	maybe 50-100 pixels horizontal. Previous attempt via Chat did not work. Maybe try

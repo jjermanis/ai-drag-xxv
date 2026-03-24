@@ -487,11 +487,11 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
         greenLightOn = true;
         preStartPhase = false;
 
-        // CPU START (only in 1P)
         if (gameMode === '1P') {
+          const delay = 200 + Math.random() * 200;
           setTimeout(() => {
             attemptStart(1);
-          }, 500);
+          }, delay);
         }
       }
     }
@@ -673,12 +673,6 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
       return;
     }
     t.start();
-
-    if (gameMode === '1P' && playerIndex === 0 && !trains[1].started) {
-      setTimeout(() => {
-        attemptStart(1);
-      }, 500);
-    }
 
     if (!raceFinished && tickInterval===null) startTickLoop();
   }
