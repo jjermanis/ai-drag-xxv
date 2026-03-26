@@ -260,10 +260,24 @@ I played 20 times. The human controlled player won 12, and the CPU player won 8.
 reasonably close.
 
 
+version 23	9 minutes dev	1 minute code gen	3 minutes test		6 hours 58
+
+For this, there are four simple UI changes to make.
+Number one, correctly putting the Reset Race and Clear Records buttons in the correct spot.
+Originally, they had been center-aligned. After the 1P and 2P buttons were add, those 
+original buttons became right-aligned. Asked Chat to move them back to the center.
+Number two, after the buttons were back where they belonged... it was noticabley they were
+not vertically aligned. Asked chat to align them.
+Number three, the new button being labeled 1P and 2P is not totally obvious. I changed the
+buttons to have 1 Player and 2 Players on. And I added emojis to add one and two head 
+symbols.
+Number four... I'm not quite sure why that button is labeled Reset Race. Changed to Next 
+Race. I kept the inner variable name resetRace the same. Maybe not ideal... but good enough
+for me.
+Across the board, addressing these issues was quick and easy.
+
 
 TODO mobile attempt is made, add a Mobile status to README
-TODO Maybe add to the 1P/2P buttons. Spell them out? Add icons for each?
-TODO Reset Race and Clear Record went to right margin. They should have remainder center
 TODO deploy a hidden mode to the site to allow to try/test before publishing.
 TODO The rectangle for the game has a white rectangle at the far end of the game. Not trivial: 
 	maybe 50-100 pixels horizontal. Previous attempt via Chat did not work. Maybe try

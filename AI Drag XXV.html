@@ -84,15 +84,16 @@ h1 {
 
     <div id="message"></div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; align-items:center; margin-top:10px;">
       <div>
-        <button class="tool-btn" id="mode1P">1P</button>
-        <button class="tool-btn" id="mode2P">2P</button>
+        <button class="tool-btn" id="mode1P">👤 1 Player</button>
+        <button class="tool-btn" id="mode2P">👥 2 Players</button>
       </div>
-      <div id="tools">
-        <button class="tool-btn" id="resetRace">Reset Race</button>
+      <div id="tools" style="text-align:center;">
+        <button class="tool-btn" id="resetRace">Next Race</button>
         <button class="tool-btn" id="clearRecords">Clear Records</button>
       </div>
+      <div></div>
     </div>
 
 <script>
