@@ -277,11 +277,32 @@ for me.
 Across the board, addressing these issues was quick and easy.
 
 
+version 24	27 minutes	3 minute code gen	3 minutes test		7 hours 31
+
+This is a software development stereotype: a significant amount of time and effort for a 
+one-line change. This has been a subtle defect that has annoyed me for a while. It is a
+defect that has existed for a long time, but it was subtle. I'll copy the issue from the 
+TODO list:
+The rectangle for the game has a white rectangle at the far end of the game. Not trivial: 
+maybe 50-100 pixels horizontal. Previous attempt via Chat did not work.
+It described the issue again, this time Claude, to try it out. It was similar: on
+making the request, the text from the AI appeared to agree with what I was asking for,
+but in actuality was something else. As indicated, it's a white rectangle on the far right.
+I would describe that with detail... but keep in mind, it is just a rectangle on the right.
+Like I said, the text from Claude would agree... but the text would impact other things
+that kinda sounded like what I asked for. The finish line (rectangle), the snow, even the 
+sky at one point. The text Claude replied read like it was fixing it... but the change 
+would be elsewhere. I took a screenshot, put a big rectangle over it, and point to that. 
+THAT didn't work. Next I tried 4 pink circles for the corners. That finally worked. There
+was an error in the size change (still a small rectangle remained) but that was easy to 
+fix. Changed an attribute being set from 1200 to 1100. That did it.
+
+
+
 TODO mobile attempt is made, add a Mobile status to README
-TODO deploy a hidden mode to the site to allow to try/test before publishing.
-TODO The rectangle for the game has a white rectangle at the far end of the game. Not trivial: 
-	maybe 50-100 pixels horizontal. Previous attempt via Chat did not work. Maybe try
-	manually at some point?
+TODO on mobile, in 1P mode, the player almost always loses. I think it is because the
+	input to start is fundamentally slower. Research to see what can be confirmed;
+	increase the start time on mobile. Maybe the OS, maybe the input mechanism?
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
 MAYBE ties aren't QUITE right. It appear if they cross the finish in the same frame, it is a tie
