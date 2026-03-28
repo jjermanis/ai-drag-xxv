@@ -154,7 +154,8 @@ h1 {
   const clearRecordsBtn = document.getElementById('clearRecords');
   const panel2 = document.getElementById('btn2').closest('.panel');
 
-let gameMode = '2P';
+  let gameMode = '2P';
+  let lastP1InputType = 'keyboard';
 
   function updateModeUI() {
     if (gameMode === '1P') {
@@ -489,7 +490,12 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
         preStartPhase = false;
 
         if (gameMode === '1P') {
-          const delay = 200 + Math.random() * 200;
+          let delay;
+          if (lastP1InputType === 'touch') {
+            delay = 300 + Math.random() * 250;
+          } else {
+            delay = 200 + Math.random() * 200;
+          }
           setTimeout(() => {
             attemptStart(1);
           }, delay);
@@ -678,7 +684,10 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
     if (!raceFinished && tickInterval===null) startTickLoop();
   }
 
-  btn1.addEventListener('click', ()=> attemptStart(0));
+  btn1.addEventListener('click', ()=> {
+    lastP1InputType = 'touch';
+    attemptStart(0);
+  });
   btn2.addEventListener('click', ()=> {
     if (gameMode === '2P') attemptStart(1);
   });
@@ -686,6 +695,7 @@ function drawCarWithSanta(carX, carY, suitColor, accent) {
   window.addEventListener('keydown', (e) => {
     const key = e.key.toLowerCase();
     if (key === players[0].key) {
+      lastP1InputType = 'keyboard';
       attemptStart(0);
       e.preventDefault();
     } else if (key === players[1].key) {

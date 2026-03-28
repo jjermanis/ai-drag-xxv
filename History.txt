@@ -298,11 +298,29 @@ was an error in the size change (still a small rectangle remained) but that was 
 fix. Changed an attribute being set from 1200 to 1100. That did it.
 
 
+version 25	10 minutes	2 minute code gen	4 minutes test		7 hours 47
+
+I deployed this app on the web in a hidden folder, to allow testing on my iOS. My wife and 
+I noticed that in P1 mode that we were losing against the CPU, without exaggeration, at 
+least 80% of the time. For several reasons, I think that starting by tapping a rectangle on 
+the screen is slower than tapping a key on a physical keyboard. I wanted to help balance 
+green wait time (and in effect winning), based on what the user is using to play in 
+1 Player mode. 
+I asked Chat to set the green wait time (in 1 Player mode only) based what the player used 
+to start the previous race. If they used the keyboard, it stayed the same as before: 200-
+400ms. If they used the button on the screen, I went for a very blatant change: 900-1500ms. 
+For sure, not intended as the final. Just to confirm it had two different reaction speeds.
+The code from Chat had about a dozen lines of code. There was a small defect (I corrected 
+it as I saw it) and it worked exactly as indicated.
+Now that I knew it worked, I went for a more normal range. I went for 300-550ms. Will that 
+be too long? Maybe, but it's a game for fun, and if the player wins too much in 1 Player 
+mode, so be it.
+
+Version 25 is release #3 on 3/28/26
+
+
 
 TODO mobile attempt is made, add a Mobile status to README
-TODO on mobile, in 1P mode, the player almost always loses. I think it is because the
-	input to start is fundamentally slower. Research to see what can be confirmed;
-	increase the start time on mobile. Maybe the OS, maybe the input mechanism?
 MAYBE Sound effect on start/finish
 MAYBE Add visual snow/confetti when someone wins
 MAYBE ties aren't QUITE right. It appear if they cross the finish in the same frame, it is a tie
